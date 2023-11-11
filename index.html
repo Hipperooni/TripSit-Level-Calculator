@@ -13,7 +13,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 150vh;
+  height: 100vh;
 }
 
 .container {
@@ -21,7 +21,7 @@
 }
 
 .logo-container img {
-  width: 150px;
+  width: 250px;
   height: auto;
 }
 
@@ -108,7 +108,9 @@ button:hover {
         
           <div class="container">
             <div class="logo-container">
-              <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
+                <a href="https://discord.gg/tripsit" target="_blank">
+                    <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
+                  </a>
             </div>
         
             <h1>Discord Levelling Calculator</h1>
@@ -241,6 +243,43 @@ document.getElementById('desiredLevel').addEventListener('input', calculateExper
 document.getElementById('startingLevel').addEventListener('input', calculateExperience);
 document.getElementById('messages').addEventListener('input', calculateExperience);
 document.getElementById('voiceHours').addEventListener('input', calculateExperience);
+document.addEventListener('DOMContentLoaded', function() {
+const startingLevelInput = document.getElementById('startingLevel');
+const desiredLevelInput = document.getElementById('desiredLevel');
+const messagesInput = document.getElementById('messages');
+const voiceHoursInput = document.getElementById('voiceHours');
+
+// Add event listener for the starting level input
+startingLevelInput.addEventListener('input', function() {
+  limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
+});
+
+// Add event listener for the desired level input
+desiredLevelInput.addEventListener('input', function() {
+  limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
+});
+
+// Add event listener for the messages input
+messagesInput.addEventListener('input', function() {
+  limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
+});
+
+// Add event listener for the voice hours input
+voiceHoursInput.addEventListener('input', function() {
+  limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
+});
+
+function limitInputLength(inputElement, maxLength) {
+  // Remove non-numeric characters
+  let sanitizedValue = inputElement.value.replace(/\D/g, '');
+
+  // Limit the length to the specified maxLength
+  sanitizedValue = sanitizedValue.slice(0, maxLength);
+
+  // Update the input value
+  inputElement.value = sanitizedValue;
+      }
+    });
   </script>
 </body>
 </html>
