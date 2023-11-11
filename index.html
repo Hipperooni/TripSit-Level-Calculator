@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
+body {
   font-family: 'Arial', sans-serif;
   background-color: #000;
   color: #fff;
@@ -15,6 +15,32 @@
   justify-content: center;
   height: 100vh;
 }
+
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .shake {
+      animation: shake 0.5s ease-in-out;
+    }
+
+    @keyframes shake {
+      0%, 100% {
+        transform: translateX(0);
+      }
+      20%, 60% {
+        transform: translateX(-10px);
+      }
+      40%, 80% {
+        transform: translateX(10px);
+      }
+    }
 
 .container {
   text-align: center;
@@ -94,6 +120,7 @@ button:hover {
   margin: 10px 0;
 }
 
+
   </style>
 </head>
 <body>
@@ -158,22 +185,45 @@ button:hover {
         
 
   <script>
-    let isAdvancedMode = false;
+let isAdvancedMode = false;
 
 async function expForNextLevel(level) {
   return 5 * (level ** 2) + (50 * level) + 100;
 }
 
 async function calculateExperience() {
-  const desiredLevel = parseInt(document.getElementById('desiredLevel').value) || 0;
+  const desiredLevelInput = document.getElementById('desiredLevel');
+  const startingLevelInput = document.getElementById('startingLevel');
+  const messagesInput = document.getElementById('messages');
+  const voiceHoursInput = document.getElementById('voiceHours');
+
+  const desiredLevel = parseInt(desiredLevelInput.value) || 1;
+  const startingLevel = parseInt(startingLevelInput.value) || 0;
+  const messages = parseInt(messagesInput.value) || 0;
+  const voiceHours = parseInt(voiceHoursInput.value) || 0;
+
+  // Check if desired level exceeds 1000
+  if (desiredLevel > 1000) {
+    shakeAndShowWarning('Desired level cannot exceed 1000!');
+    return;
+  }
+
+  // Check if starting level exceeds 1000
+  if (startingLevel > 1000) {
+    shakeAndShowWarning('Starting level cannot exceed 1000!');
+    return;
+  }
+
+  // Check if messages or voice hours exceed 1 million
+  if (messages > 1000000 || voiceHours > 1000000) {
+    shakeAndShowWarning('Messages or Voice Hours cannot exceed 1 million!');
+    return;
+  }
 
   let totalExperienceStartingLevel;
   if (!isAdvancedMode) {
-    const startingLevel = parseInt(document.getElementById('startingLevel').value) || 0;
     totalExperienceStartingLevel = await calculateTotalExperience(startingLevel);
   } else {
-    const messages = parseInt(document.getElementById('messages').value) || 0;
-    const voiceHours = parseInt(document.getElementById('voiceHours').value) || 0;
     totalExperienceStartingLevel = (messages * 20) + ((voiceHours * 60) * 10);
   }
 
@@ -183,31 +233,17 @@ async function calculateExperience() {
   // Check if XP required is negative
   if (experienceLeft < 0) {
     // Set all results to "0"
-    document.getElementById('totalExperience').textContent = '0';
-    document.getElementById('messagesTotal').textContent = '0';
-    document.getElementById('voiceHoursTotal').textContent = '0';
-    document.getElementById('experienceLeft').textContent = '0';
-    document.getElementById('messagesLeft').textContent = '0';
-    document.getElementById('voiceHoursLeft').textContent = '0';
-
+    clearResults();
     // Display warning message
-    document.getElementById('warningMessage').textContent = 'Starting XP cannot be less than desired XP!';
+    showWarning('Starting XP cannot be less than desired XP!');
   } else {
     // Update results as usual
-    document.getElementById('totalExperience').textContent = totalExperienceDesiredLevel.toString();
-    document.getElementById('messagesTotal').textContent = Math.ceil(totalExperienceDesiredLevel / 20).toString();
-    document.getElementById('voiceHoursTotal').textContent = (totalExperienceDesiredLevel / 10 / 60).toFixed(2).toString();
-  
-    document.getElementById('experienceLeft').textContent = experienceLeft > 0 ? experienceLeft.toString() : '0';
-    document.getElementById('messagesLeft').textContent = Math.ceil(experienceLeft / 20).toString();
-    document.getElementById('voiceHoursLeft').textContent = (experienceLeft / 10 / 60).toFixed(2).toString();
-
-    // Clear warning message
-    document.getElementById('warningMessage').textContent = '';
+    updateResults(totalExperienceDesiredLevel, experienceLeft);
   }
 }
 
 async function calculateTotalExperience(level) {
+
   let totalExperience = 0;
 
   for (let currentLevel = 1; currentLevel <= level; currentLevel++) {
@@ -222,7 +258,7 @@ function toggleAdvancedMode() {
   const startingLevelInputs = document.getElementById('startingLevelInputs');
   const advancedModeInputs = document.getElementById('advancedModeInputs');
   const advancedModeButton = document.getElementById('advancedModeButton');
-  
+
   if (isAdvancedMode) {
     startingLevelInputs.style.display = 'none';
     advancedModeInputs.style.display = 'block';
@@ -236,6 +272,47 @@ function toggleAdvancedMode() {
   calculateExperience();
 }
 
+function limitInputLength(inputElement, maxLength) {
+  let sanitizedValue = inputElement.value.replace(/\D/g, '');
+  sanitizedValue = sanitizedValue.slice(0, maxLength);
+  inputElement.value = sanitizedValue;
+}
+
+function showWarning(message) {
+  document.getElementById('warningMessage').textContent = message;
+}
+
+function shakeAndShowWarning(message) {
+  document.body.classList.add('shake');
+  showWarning(message);
+  setTimeout(() => {
+    document.body.classList.remove('shake');
+  }, 1000); // Adjust the delay as needed
+}
+
+function clearResults() {
+  document.getElementById('totalExperience').textContent = '0';
+  document.getElementById('messagesTotal').textContent = '0';
+  document.getElementById('voiceHoursTotal').textContent = '0';
+  document.getElementById('experienceLeft').textContent = '0';
+  document.getElementById('messagesLeft').textContent = '0';
+  document.getElementById('voiceHoursLeft').textContent = '0';
+}
+
+function updateResults(totalExperienceDesiredLevel, experienceLeft) {
+  // Update results as usual
+  document.getElementById('totalExperience').textContent = totalExperienceDesiredLevel.toString();
+  document.getElementById('messagesTotal').textContent = Math.ceil(totalExperienceDesiredLevel / 20).toString();
+  document.getElementById('voiceHoursTotal').textContent = (totalExperienceDesiredLevel / 10 / 60).toFixed(2).toString();
+
+  document.getElementById('experienceLeft').textContent = experienceLeft > 0 ? experienceLeft.toString() : '0';
+  document.getElementById('messagesLeft').textContent = Math.ceil(experienceLeft / 20).toString();
+  document.getElementById('voiceHoursLeft').textContent = (experienceLeft / 10 / 60).toFixed(2).toString();
+
+  // Clear warning message
+  document.getElementById('warningMessage').textContent = '';
+}
+
 // Initial calculation and input width initialization when the page loads
 calculateExperience();
 // Add event listeners to trigger calculation on input change
@@ -243,43 +320,33 @@ document.getElementById('desiredLevel').addEventListener('input', calculateExper
 document.getElementById('startingLevel').addEventListener('input', calculateExperience);
 document.getElementById('messages').addEventListener('input', calculateExperience);
 document.getElementById('voiceHours').addEventListener('input', calculateExperience);
-document.addEventListener('DOMContentLoaded', function() {
-const startingLevelInput = document.getElementById('startingLevel');
-const desiredLevelInput = document.getElementById('desiredLevel');
-const messagesInput = document.getElementById('messages');
-const voiceHoursInput = document.getElementById('voiceHours');
+document.addEventListener('DOMContentLoaded', function () {
+  const startingLevelInput = document.getElementById('startingLevel');
+  const desiredLevelInput = document.getElementById('desiredLevel');
+  const messagesInput = document.getElementById('messages');
+  const voiceHoursInput = document.getElementById('voiceHours');
 
-// Add event listener for the starting level input
-startingLevelInput.addEventListener('input', function() {
-  limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
+  // Add event listener for the starting level input
+  startingLevelInput.addEventListener('input', function () {
+    limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
+  });
+
+  // Add event listener for the desired level input
+  desiredLevelInput.addEventListener('input', function () {
+    limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
+  });
+
+  // Add event listener for the messages input
+  messagesInput.addEventListener('input', function () {
+    limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
+  });
+
+  // Add event listener for the voice hours input
+  voiceHoursInput.addEventListener('input', function () {
+    limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
+  });
 });
 
-// Add event listener for the desired level input
-desiredLevelInput.addEventListener('input', function() {
-  limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
-});
-
-// Add event listener for the messages input
-messagesInput.addEventListener('input', function() {
-  limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
-});
-
-// Add event listener for the voice hours input
-voiceHoursInput.addEventListener('input', function() {
-  limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
-});
-
-function limitInputLength(inputElement, maxLength) {
-  // Remove non-numeric characters
-  let sanitizedValue = inputElement.value.replace(/\D/g, '');
-
-  // Limit the length to the specified maxLength
-  sanitizedValue = sanitizedValue.slice(0, maxLength);
-
-  // Update the input value
-  inputElement.value = sanitizedValue;
-      }
-    });
   </script>
 </body>
 </html>
