@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+  font-family: 'Arial', sans-serif;
+  background-color: #000;
+  color: #fff;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150vh;
+}
+
+.container {
+  text-align: center;
+}
+
+.logo-container img {
+  width: 150px;
+  height: auto;
+}
+
+h1 {
+  margin-top: 10px;
+}
+
+.calculator-container {
+  margin-top: 20px;
+  border: 2px solid #fff;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.arrow-icon {
+  font-size: 24px;
+  margin: 10px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #fff;
+  background-color: #000;
+  color: #fff;
+}
+
+button {
+  background-color: #000;
+  color: #fff;
+  padding: 10px 15px;
+  border: 2px solid #fff;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+button:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.warning {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.result-container {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: #000;
+  border: 2px solid #fff;
+  border-radius: 10px;
+}
+
+.result-container p {
+  margin: 10px 0;
+}
+
+  </style>
+</head>
+<body>
+    <html lang="en">
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <link rel="stylesheet" href="styles.css">
+          <title>Discord Levelling Calculator</title>
+        </head>
+        <body>
+        
+          <div class="container">
+            <div class="logo-container">
+              <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
+            </div>
+        
+            <h1>Discord Levelling Calculator</h1>
+          <p><strong>Use this calculator to find out how much XP you need to get to a certain level</strong></p>
+        
+            <div class="calculator-container">
+              <button id="advancedModeButton" onclick="toggleAdvancedMode()">Advanced Mode</button>
+        
+        <div id="advancedModeInputs" style="display: none;">
+          <div class="input-group">
+            <label for="messages"><strong>Messages:</strong></label>
+            <input type="number" id="messages" placeholder="Enter sent messages">
+          </div>
+          
+          <div class="input-group">
+            <label for="voiceHours"><strong>Voice Hours:</strong></label>
+            <input type="number" id="voiceHours" placeholder="Enter voice hours">
+          </div>
+        </div>
+              <div id="startingLevelInputs">
+                <label for="startingLevel"><strong>Starting Level:</strong></label>
+                <input type="number" id="startingLevel" placeholder="Enter your current level (use /level command to find)">
+              </div>
+        <div class="arrow-icon">&#8594;</div>
+              <label for="desiredLevel"><strong>Desired Level:</strong></label>
+              <input type="number" id="desiredLevel" placeholder="Enter the level you want to reach">
+        
+              <div class="result-container">
+              <div id="warningMessage" class="warning"></div>
+                <p><strong>Needed to reach desired level</strong></p>
+                <p>XP: <span id="experienceLeft">0</span></p>
+                <p>Messages: <span id="messagesLeft">0</span></p>
+                <p>Voice Hours: <span id="voiceHoursLeft">0</span></p>
+                <br>
+                <p><strong>Total needed (from lvl 0)</strong></p>
+                <p>XP: <span id="totalExperience">0</span></p>
+                <p>Messages: <span id="messagesTotal">0</span></p>
+                <p>Voice Hours: <span id="voiceHoursTotal">0</span></p>
+            </div>
+          </div>
+        
+          <script src="script.js"></script>
+        </body>
+        </html>
+        
+
+  <script>
+    let isAdvancedMode = false;
+
+async function expForNextLevel(level) {
+  return 5 * (level ** 2) + (50 * level) + 100;
+}
+
+async function calculateExperience() {
+  const desiredLevel = parseInt(document.getElementById('desiredLevel').value) || 0;
+
+  let totalExperienceStartingLevel;
+  if (!isAdvancedMode) {
+    const startingLevel = parseInt(document.getElementById('startingLevel').value) || 0;
+    totalExperienceStartingLevel = await calculateTotalExperience(startingLevel);
+  } else {
+    const messages = parseInt(document.getElementById('messages').value) || 0;
+    const voiceHours = parseInt(document.getElementById('voiceHours').value) || 0;
+    totalExperienceStartingLevel = (messages * 20) + ((voiceHours * 60) * 10);
+  }
+
+  const totalExperienceDesiredLevel = await calculateTotalExperience(desiredLevel);
+  const experienceLeft = totalExperienceDesiredLevel - totalExperienceStartingLevel;
+
+  // Check if XP required is negative
+  if (experienceLeft < 0) {
+    // Set all results to "0"
+    document.getElementById('totalExperience').textContent = '0';
+    document.getElementById('messagesTotal').textContent = '0';
+    document.getElementById('voiceHoursTotal').textContent = '0';
+    document.getElementById('experienceLeft').textContent = '0';
+    document.getElementById('messagesLeft').textContent = '0';
+    document.getElementById('voiceHoursLeft').textContent = '0';
+
+    // Display warning message
+    document.getElementById('warningMessage').textContent = 'Starting XP cannot be less than desired XP!';
+  } else {
+    // Update results as usual
+    document.getElementById('totalExperience').textContent = totalExperienceDesiredLevel.toString();
+    document.getElementById('messagesTotal').textContent = Math.ceil(totalExperienceDesiredLevel / 20).toString();
+    document.getElementById('voiceHoursTotal').textContent = (totalExperienceDesiredLevel / 10 / 60).toFixed(2).toString();
+  
+    document.getElementById('experienceLeft').textContent = experienceLeft > 0 ? experienceLeft.toString() : '0';
+    document.getElementById('messagesLeft').textContent = Math.ceil(experienceLeft / 20).toString();
+    document.getElementById('voiceHoursLeft').textContent = (experienceLeft / 10 / 60).toFixed(2).toString();
+
+    // Clear warning message
+    document.getElementById('warningMessage').textContent = '';
+  }
+}
+
+async function calculateTotalExperience(level) {
+  let totalExperience = 0;
+
+  for (let currentLevel = 1; currentLevel <= level; currentLevel++) {
+    totalExperience += await expForNextLevel(currentLevel);
+  }
+
+  return totalExperience;
+}
+
+function toggleAdvancedMode() {
+  isAdvancedMode = !isAdvancedMode;
+  const startingLevelInputs = document.getElementById('startingLevelInputs');
+  const advancedModeInputs = document.getElementById('advancedModeInputs');
+  const advancedModeButton = document.getElementById('advancedModeButton');
+  
+  if (isAdvancedMode) {
+    startingLevelInputs.style.display = 'none';
+    advancedModeInputs.style.display = 'block';
+    advancedModeButton.textContent = 'Normal Mode';
+  } else {
+    startingLevelInputs.style.display = 'block';
+    advancedModeInputs.style.display = 'none';
+    advancedModeButton.textContent = 'Advanced Mode';
+  }
+
+  calculateExperience();
+}
+
+// Initial calculation and input width initialization when the page loads
+calculateExperience();
+// Add event listeners to trigger calculation on input change
+document.getElementById('desiredLevel').addEventListener('input', calculateExperience);
+document.getElementById('startingLevel').addEventListener('input', calculateExperience);
+document.getElementById('messages').addEventListener('input', calculateExperience);
+document.getElementById('voiceHours').addEventListener('input', calculateExperience);
+  </script>
+</body>
+</html>
