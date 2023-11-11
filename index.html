@@ -282,11 +282,17 @@ function showWarning(message) {
   document.getElementById('warningMessage').textContent = message;
 }
 
+document.body.style.overflow = 'visible';
 function shakeAndShowWarning(message) {
+  // Temporarily remove overflow: hidden; during the shake effect
+  document.body.style.overflow = 'hidden';
   document.body.classList.add('shake');
   showWarning(message);
+
   setTimeout(() => {
     document.body.classList.remove('shake');
+    // Restore overflow: hidden; after the shake effect is complete
+    document.body.style.overflow = 'visible';
   }, 1000); // Adjust the delay as needed
 }
 
