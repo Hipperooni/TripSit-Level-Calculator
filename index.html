@@ -455,9 +455,9 @@ const logoImage = document.getElementById('logoImage');
 
   // Adjust the range and scale as needed
   const offset1X = (mouseX - window.innerWidth / 2) / 200;
-  const offset1Y = (mouseY - window.innerHeight / 2) / 200;
+  const offset1Y = -(mouseY - window.innerHeight / 2) / 100;
   const offset2X = -(mouseX - window.innerWidth / 2) / 200;
-  const offset2Y = -(mouseY - window.innerHeight / 2) / 200;
+  const offset2Y = (mouseY - window.innerHeight / 2) / 100;
 
   // Apply the transform with chromatic aberration effect
   logoImage1.style.transform = `translate(-49%, -49%) translate(${offset1X}px, ${offset1Y}px)`;
