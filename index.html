@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
+
 body {
   font-family: 'Arial', sans-serif;
   background-color: #000;
@@ -60,7 +61,7 @@ h1 {
 }
 
 .arrow-icon {
-  font-size: 24px;
+  font-size: 40px;
   margin: 10px;
 }
 
@@ -76,6 +77,7 @@ input {
   border: 1px solid #fff;
   background-color: #000;
   color: #fff;
+  border-radius: 10px;
 }
 
 button {
@@ -107,7 +109,10 @@ button:hover {
   background-color: #000;
   padding-top: 30px;
   border-radius: 10px;
+  line-height: 0.75;
 }
+
+
 
 .signature {
   color: grey;
@@ -134,80 +139,78 @@ tooltip {
   padding: 5px;
   position: absolute;
   z-index: 1;
-  bottom: 125%; /* Position the tooltip above the button */
+  bottom: 100;/* Position the tooltip above the button */
   left: 50%;
   margin-left: -60px; /* Center the tooltip horizontally */
   opacity: 0;
   transition: opacity 0.3s;
 }
 
-
   </style>
-  <html lang="en">
-    <head>
-      <link rel="icon" href="https://raw.githubusercontent.com/Hipperooni/TripSit-Level-Calculator/main/TS.ico" type="image/x-icon">
-      <link rel="shortcut icon" href="https://raw.githubusercontent.com/Hipperooni/TripSit-Level-Calculator/main/TS.ico" type="image/x-icon">
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <link rel="stylesheet" href="styles.css">
-      <title>TripSit Level Calculator</title>
-    </head>
-    <body>
-    
-      <div class="container">
-        <div class="logo-container">
-          <a href="https://discord.gg/tripsit" target="_blank">
-        <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
-      </a>
-        </div>
-    
-        <h1>Discord Levelling Calculator</h1>
-      <p><strong>Use this calculator to find out how much XP you need to get to a certain level</strong></p>
-    
-        <div class="calculator-container">   
-          <div class="tooltip">
-            <button id="advancedModeButton" onclick="toggleAdvancedMode()">Advanced Mode</button>
-            <span class="tooltiptext" id="tooltipText">Enable Advanced Mode for a more accurate result</span>
-          </div>
-    
-    <div id="advancedModeInputs" style="display: none;">
-      <div class="input-group">
-        <label for="messages"><strong>Messages:</strong></label>
-        <input type="number" id="messages" placeholder="Enter sent messages">
-      </div>
-      
-      <div class="input-group">
-        <label for="voiceHours"><strong>Voice Hours:</strong></label>
-        <input type="number" id="voiceHours" placeholder="Enter voice hours">
-      </div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles.css">
+  <title>Discord Levelling Calculator</title>
+</head>
+<body>
+
+  <div class="container">
+    <div class="logo-container">
+      <a href="https://discord.gg/tripsit" target="_blank">
+    <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
+  </a>
     </div>
-          <div id="startingLevelInputs">
-            <label for="startingLevel"><strong>Starting Level:</strong></label>
-            <input type="number" id="startingLevel" placeholder="Enter your current level (use /level command to find)">
-          </div>
-    <div class="arrow-icon">&#8594;</div>
-          <label for="desiredLevel"><strong>Desired Level:</strong></label>
-          <input type="number" id="desiredLevel" placeholder="Enter the level you want to reach">
-        </div>
-          <div class="result-container">
-          <div id="warningMessage" class="warning"></div>
-            <p><strong>Needed to reach desired level</strong></p>
-            <p>XP: <span id="experienceLeft">0</span></p>
-            <p>Messages: <span id="messagesLeft">0</span></p>
-            <p>Voice Hours: <span id="voiceHoursLeft">0</span></p>
-            <br>
-            <p><strong>Total needed (from lvl 0)</strong></p>
-            <p>XP: <span id="totalExperience">0</span></p>
-            <p>Messages: <span id="messagesTotal">0</span></p>
-            <p>Voice Hours: <span id="voiceHoursTotal">0</span></p>
-        </div>
-        <div class="signature"> <p> v1.26 | Made with love by Hipperooni 🐧</p>
-        </div>
-    
-      <script src="script.js"></script>
-    </body>
-    </html>
-  <script>
+
+    <h1>Discord Levelling Calculator</h1>
+  <p><strong>Use this calculator to find out how much XP you need to get to a certain level</strong></p>
+
+    <div class="calculator-container">   
+      <div class="tooltip">
+        <button id="advancedModeButton" onclick="toggleAdvancedMode()">Advanced Mode</button>
+        <span class="tooltiptext" id="tooltipText">Enable Advanced Mode for a more accurate result</span>
+      </div>
+
+<div id="advancedModeInputs" style="display: none;">
+  <div class="input-group">
+    <label for="messages"><strong>Messages</strong></label>
+    <input type="number" id="messages" placeholder="Enter sent messages">
+  </div>
+  <br>
+  <div class="input-group">
+    <label for="voiceHours"><strong>Voice Hours</strong></label>
+    <input type="number" id="voiceHours" placeholder="Enter voice hours">
+  </div>
+</div>
+      <div id="startingLevelInputs">
+        <label for="startingLevel"><strong>Starting Level</strong></label>
+        <input type="number" id="startingLevel" placeholder="Enter your current level (use /level command to find)">
+      </div>
+<div class="arrow-icon">&#8594;</div>
+      <label for="desiredLevel"><strong>Desired Level</strong></label>
+      <input type="number" id="desiredLevel" placeholder="Enter the level you want to reach">
+    </div>
+      <div class="result-container">
+      <div id="warningMessage" class="warning"></div>
+        <p><strong>Needed to reach desired level</strong></p>
+        <p>XP - <span id="experienceLeft">0</span></p>
+        <p>Messages - <span id="messagesLeft">0</span></p>
+        <p>Voice Hours - <span id="voiceHoursLeft">0</span></p>
+        <br>
+        <p><strong>Total needed (from lvl 0)</strong></p>
+        <p>XP - <span id="totalExperience">0</span></p>
+        <p>Messages - <span id="messagesTotal">0</span></p>
+        <p>Voice Hours - <span id="voiceHoursTotal">0</span></p>
+    </div>
+    <div class="signature"> <p> v1.3 | Made with love by Hipperooni 🐧</p>
+    </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
+<script>
 let isAdvancedMode = false;
 
 async function expForNextLevel(level) {
@@ -291,7 +294,8 @@ function toggleAdvancedMode() {
   } else {
     startingLevelInputs.style.display = 'block';
     advancedModeInputs.style.display = 'none';
-    advancedModeButton.textContent = 'Enable Advanced Mode for a more accurate result';
+    advancedModeButton.textContent = 'Advanced Mode';
+    tooltipText.textContent = 'Enable Advanced Mode for a more accurate result';
   }
 
   calculateExperience();
@@ -351,32 +355,25 @@ document.getElementById('startingLevel').addEventListener('input', calculateExpe
 document.getElementById('messages').addEventListener('input', calculateExperience);
 document.getElementById('voiceHours').addEventListener('input', calculateExperience);
 document.addEventListener('DOMContentLoaded', function () {
-  const startingLevelInput = document.getElementById('startingLevel');
-  const desiredLevelInput = document.getElementById('desiredLevel');
-  const messagesInput = document.getElementById('messages');
-  const voiceHoursInput = document.getElementById('voiceHours');
-
-  // Add event listener for the starting level input
-  startingLevelInput.addEventListener('input', function () {
-    limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
-  });
-
-  // Add event listener for the desired level input
-  desiredLevelInput.addEventListener('input', function () {
-    limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
-  });
-
-  // Add event listener for the messages input
-  messagesInput.addEventListener('input', function () {
-    limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
-  });
-
-  // Add event listener for the voice hours input
-  voiceHoursInput.addEventListener('input', function () {
-    limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
-  });
+const startingLevelInput = document.getElementById('startingLevel');
+const desiredLevelInput = document.getElementById('desiredLevel');
+const messagesInput = document.getElementById('messages');
+const voiceHoursInput = document.getElementById('voiceHours');
+// Add event listener for the starting level input
+startingLevelInput.addEventListener('input', function () {
+  limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
 });
-
-  </script>
-</body>
-</html>
+// Add event listener for the desired level input
+desiredLevelInput.addEventListener('input', function () {
+  limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
+});
+// Add event listener for the messages input
+messagesInput.addEventListener('input', function () {
+  limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
+});
+// Add event listener for the voice hours input
+voiceHoursInput.addEventListener('input', function () {
+  limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
+});
+});
+</script>
