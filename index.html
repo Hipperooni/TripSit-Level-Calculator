@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-
 body {
   font-family: 'Arial', sans-serif;
   background-color: #000;
@@ -37,12 +36,23 @@ body {
 }
 
 .logo-container img {
+  mix-blend-mode: lighten;
+  position: absolute;
   width: 250px;
   height: auto;
+  transform: translate(-50%, -50%);
+}
+
+#logoImage1 {
+  transform: translate(-49%, -51%); /* Offset by 5 pixels upwards */
+}
+
+#logoImage2 {
+  transform: translate(-51%, -49%);
 }
 
 h1 {
-  margin-top: 10px;
+  margin-top: 45px;
 }
 
 .calculator-container {
@@ -112,8 +122,6 @@ button:hover {
   line-height: 0.75;
 }
 
-
-
 .signature {
   color: grey;
 }
@@ -161,7 +169,9 @@ tooltip {
   <div class="container">
     <div class="logo-container">
       <a href="https://discord.gg/tripsit" target="_blank">
-    <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
+    <img src="https://i.gyazo.com/fdf346a2eea08868fd52439679101bef.png" alt="Logo" id="logoImage1">
+    <img src="https://i.gyazo.com/f98755f6b1f0c769eaeeae50729a0044.png" alt="Logo" id="logoImage2">
+    <img src="https://i.gyazo.com/eb8f812a85a8c2dcdcfea2d0697e2dc4.png" alt="Logo" id="logoImage3">
   </a>
     </div>
 
@@ -205,7 +215,7 @@ tooltip {
         <p>Messages - <span id="messagesTotal">0</span></p>
         <p>Voice Hours - <span id="voiceHoursTotal">0</span></p>
     </div>
-    <div class="signature"> <p> v1.32 | Made with love by Hipperooni <a href="https://www.youtube.com/watch?v=N4uylG_qrcU" target="_blank">🐧</p> </a>
+    <div class="signature"> <p> v1.35 | Made with love by Hipperooni <a href="https://www.youtube.com/watch?v=N4uylG_qrcU" target="_blank">🐧</p> </a>
     </div>
 
   <script src="script.js"></script>
@@ -357,25 +367,48 @@ document.getElementById('startingLevel').addEventListener('input', calculateExpe
 document.getElementById('messages').addEventListener('input', calculateExperience);
 document.getElementById('voiceHours').addEventListener('input', calculateExperience);
 document.addEventListener('DOMContentLoaded', function () {
-const startingLevelInput = document.getElementById('startingLevel');
-const desiredLevelInput = document.getElementById('desiredLevel');
-const messagesInput = document.getElementById('messages');
-const voiceHoursInput = document.getElementById('voiceHours');
-// Add event listener for the starting level input
-startingLevelInput.addEventListener('input', function () {
-  limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
+  const startingLevelInput = document.getElementById('startingLevel');
+  const desiredLevelInput = document.getElementById('desiredLevel');
+  const messagesInput = document.getElementById('messages');
+  const voiceHoursInput = document.getElementById('voiceHours');
+
+  // Add event listener for the starting level input
+  startingLevelInput.addEventListener('input', function () {
+    limitInputLength(startingLevelInput, 4); // Limit to 4 characters (adjust as needed)
+  });
+
+  // Add event listener for the desired level input
+  desiredLevelInput.addEventListener('input', function () {
+    limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
+  });
+
+  // Add event listener for the messages input
+  messagesInput.addEventListener('input', function () {
+    limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
+  });
+
+  // Add event listener for the voice hours input
+  voiceHoursInput.addEventListener('input', function () {
+    limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
+  });
 });
-// Add event listener for the desired level input
-desiredLevelInput.addEventListener('input', function () {
-  limitInputLength(desiredLevelInput, 4); // Limit to 4 characters (adjust as needed)
+
+const logoContainer = document.getElementById('logoContainer');
+const logoImage = document.getElementById('logoImage');
+
+document.addEventListener('mousemove', (e) => {
+  const { clientX: mouseX, clientY: mouseY } = e;
+
+  // Adjust the range and scale as needed
+  const offset1X = (mouseX - window.innerWidth / 2) / 150;
+  const offset1Y = (mouseY - window.innerHeight / 2) / 150;
+  const offset2X = -(mouseX - window.innerWidth / 2) / 150;
+  const offset2Y = -(mouseY - window.innerHeight / 2) / 150;
+
+  // Apply the transform with chromatic aberration effect
+  logoImage1.style.transform = `translate(-49%, -49%) translate(${offset1X}px, ${offset1Y}px)`;
+  logoImage2.style.transform = `translate(-51%, -51%) translate(${offset2X}px, ${offset2Y}px)`;
 });
-// Add event listener for the messages input
-messagesInput.addEventListener('input', function () {
-  limitInputLength(messagesInput, 7); // Limit to 7 characters (adjust as needed)
-});
-// Add event listener for the voice hours input
-voiceHoursInput.addEventListener('input', function () {
-  limitInputLength(voiceHoursInput, 7); // Limit to 7 characters (adjust as needed)
-});
-});
+
+
 </script>
