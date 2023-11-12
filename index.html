@@ -16,31 +16,20 @@ body {
   height: 100vh;
 }
 
-    body {
-      margin: 0;
-      padding: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
-      overflow: hidden;
-    }
-
-    .shake {
-      animation: shake 0.5s ease-in-out;
-    }
-
-    @keyframes shake {
-      0%, 100% {
-        transform: translateX(0);
-      }
-      20%, 60% {
-        transform: translateX(-10px);
-      }
-      40%, 80% {
-        transform: translateX(10px);
-      }
-    }
+.shake {
+  animation: shake 0.5s ease-in-out;
+}
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-10px);
+  }
+  40%, 80% {
+    transform: translateX(10px);
+  }
+}
 
 .container {
   text-align: center;
@@ -56,8 +45,10 @@ h1 {
 }
 
 .calculator-container {
+  position: relative;
   margin-top: 20px;
   border: 2px solid #fff;
+  background-color: #000;
   padding: 20px;
   border-radius: 10px;
 }
@@ -109,89 +100,113 @@ button:hover {
 }
 
 .result-container {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: #000;
+  position: relative;
+  z-index: -1;
+  margin-top: -30px;
   border: 2px solid #fff;
+  background-color: #000;
+  padding-top: 30px;
   border-radius: 10px;
-}
-
-.result-container p {
-  margin: 10px 0;
 }
 
 .signature {
   color: grey;
 }
 
+tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* Position the tooltip above the button */
+  left: 50%;
+  margin-left: -60px; /* Center the tooltip horizontally */
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
 
   </style>
-</head>
-<body>
-    <html lang="en">
-        <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <link rel="stylesheet" href="styles.css">
-          <title>Discord Levelling Calculator</title>
-          <link rel="icon" href="https://raw.githubusercontent.com/Hipperooni/TripSit-Level-Calculator/main/TS.ico" type="image/x-icon">
-          <link rel="shortcut icon" href="https://raw.githubusercontent.com/Hipperooni/TripSit-Level-Calculator/main/TS.ico" type="image/x-icon">
-        </head>
-        <body>
-        
-          <div class="container">
-            <div class="logo-container">
-                <a href="https://discord.gg/tripsit" target="_blank">
-                    <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
-                  </a>
-            </div>
-        
-            <h1>Discord Levelling Calculator</h1>
-          <p><strong>Use this calculator to find out how much XP you need to get to a certain level</strong></p>
-        
-            <div class="calculator-container">
-              <button id="advancedModeButton" onclick="toggleAdvancedMode()">Advanced Mode</button>
-        
-        <div id="advancedModeInputs" style="display: none;">
-          <div class="input-group">
-            <label for="messages"><strong>Messages:</strong></label>
-            <input type="number" id="messages" placeholder="Enter sent messages">
-          </div>
-          
-          <div class="input-group">
-            <label for="voiceHours"><strong>Voice Hours:</strong></label>
-            <input type="number" id="voiceHours" placeholder="Enter voice hours">
-          </div>
+  <html lang="en">
+    <head>
+      <link rel="icon" href="https://raw.githubusercontent.com/Hipperooni/TripSit-Level-Calculator/main/TS.ico" type="image/x-icon">
+      <link rel="shortcut icon" href="https://raw.githubusercontent.com/Hipperooni/TripSit-Level-Calculator/main/TS.ico" type="image/x-icon">
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <link rel="stylesheet" href="styles.css">
+      <title>TripSit Level Calculator</title>
+    </head>
+    <body>
+    
+      <div class="container">
+        <div class="logo-container">
+          <a href="https://discord.gg/tripsit" target="_blank">
+        <img src="https://i.gyazo.com/be25395064effa1c2d18228c5bf8756a.png" alt="Logo">
+      </a>
         </div>
-              <div id="startingLevelInputs">
-                <label for="startingLevel"><strong>Starting Level:</strong></label>
-                <input type="number" id="startingLevel" placeholder="Enter your current level (use /level command to find)">
-              </div>
-        <div class="arrow-icon">&#8594;</div>
-              <label for="desiredLevel"><strong>Desired Level:</strong></label>
-              <input type="number" id="desiredLevel" placeholder="Enter the level you want to reach">
-        
-              <div class="result-container">
-              <div id="warningMessage" class="warning"></div>
-                <p><strong>Needed to reach desired level</strong></p>
-                <p>XP: <span id="experienceLeft">0</span></p>
-                <p>Messages: <span id="messagesLeft">0</span></p>
-                <p>Voice Hours: <span id="voiceHoursLeft">0</span></p>
-                <br>
-                <p><strong>Total needed (from lvl 0)</strong></p>
-                <p>XP: <span id="totalExperience">0</span></p>
-                <p>Messages: <span id="messagesTotal">0</span></p>
-                <p>Voice Hours: <span id="voiceHoursTotal">0</span></p>
-            </div>
+    
+        <h1>Discord Levelling Calculator</h1>
+      <p><strong>Use this calculator to find out how much XP you need to get to a certain level</strong></p>
+    
+        <div class="calculator-container">   
+          <div class="tooltip">
+            <button id="advancedModeButton" onclick="toggleAdvancedMode()">Advanced Mode</button>
+            <span class="tooltiptext" id="tooltipText">Enable Advanced Mode for a more accurate result</span>
           </div>
-          <div class="signature"> <p> v1.25 Made with love by Hipperooni 🐧</p>
+    
+    <div id="advancedModeInputs" style="display: none;">
+      <div class="input-group">
+        <label for="messages"><strong>Messages:</strong></label>
+        <input type="number" id="messages" placeholder="Enter sent messages">
+      </div>
+      
+      <div class="input-group">
+        <label for="voiceHours"><strong>Voice Hours:</strong></label>
+        <input type="number" id="voiceHours" placeholder="Enter voice hours">
+      </div>
+    </div>
+          <div id="startingLevelInputs">
+            <label for="startingLevel"><strong>Starting Level:</strong></label>
+            <input type="number" id="startingLevel" placeholder="Enter your current level (use /level command to find)">
           </div>
-        
-          <script src="script.js"></script>
-        </body>
-        </html>
-        
-
+    <div class="arrow-icon">&#8594;</div>
+          <label for="desiredLevel"><strong>Desired Level:</strong></label>
+          <input type="number" id="desiredLevel" placeholder="Enter the level you want to reach">
+        </div>
+          <div class="result-container">
+          <div id="warningMessage" class="warning"></div>
+            <p><strong>Needed to reach desired level</strong></p>
+            <p>XP: <span id="experienceLeft">0</span></p>
+            <p>Messages: <span id="messagesLeft">0</span></p>
+            <p>Voice Hours: <span id="voiceHoursLeft">0</span></p>
+            <br>
+            <p><strong>Total needed (from lvl 0)</strong></p>
+            <p>XP: <span id="totalExperience">0</span></p>
+            <p>Messages: <span id="messagesTotal">0</span></p>
+            <p>Voice Hours: <span id="voiceHoursTotal">0</span></p>
+        </div>
+        <div class="signature"> <p> v1.26 | Made with love by Hipperooni 🐧</p>
+        </div>
+    
+      <script src="script.js"></script>
+    </body>
+    </html>
   <script>
 let isAdvancedMode = false;
 
@@ -266,15 +281,17 @@ function toggleAdvancedMode() {
   const startingLevelInputs = document.getElementById('startingLevelInputs');
   const advancedModeInputs = document.getElementById('advancedModeInputs');
   const advancedModeButton = document.getElementById('advancedModeButton');
+  const tooltipText = document.getElementById('tooltipText');
 
   if (isAdvancedMode) {
     startingLevelInputs.style.display = 'none';
     advancedModeInputs.style.display = 'block';
     advancedModeButton.textContent = 'Normal Mode';
+    tooltipText.textContent = 'Disable Advanced Mode for an easier result';
   } else {
     startingLevelInputs.style.display = 'block';
     advancedModeInputs.style.display = 'none';
-    advancedModeButton.textContent = 'Advanced Mode';
+    advancedModeButton.textContent = 'Enable Advanced Mode for a more accurate result';
   }
 
   calculateExperience();
@@ -290,7 +307,6 @@ function showWarning(message) {
   document.getElementById('warningMessage').textContent = message;
 }
 
-document.body.style.overflow = 'visible';
 function shakeAndShowWarning(message) {
   // Temporarily remove overflow: hidden; during the shake effect
   document.body.style.overflow = 'hidden';
@@ -317,11 +333,11 @@ function updateResults(totalExperienceDesiredLevel, experienceLeft) {
   // Update results as usual
   document.getElementById('totalExperience').textContent = totalExperienceDesiredLevel.toString();
   document.getElementById('messagesTotal').textContent = Math.ceil(totalExperienceDesiredLevel / 20).toString();
-  document.getElementById('voiceHoursTotal').textContent = (totalExperienceDesiredLevel / 10 / 60).toFixed(2).toString();
+  document.getElementById('voiceHoursTotal').textContent = (totalExperienceDesiredLevel / 10 / 60).toFixed(1).toString();
 
   document.getElementById('experienceLeft').textContent = experienceLeft > 0 ? experienceLeft.toString() : '0';
   document.getElementById('messagesLeft').textContent = Math.ceil(experienceLeft / 20).toString();
-  document.getElementById('voiceHoursLeft').textContent = (experienceLeft / 10 / 60).toFixed(2).toString();
+  document.getElementById('voiceHoursLeft').textContent = (experienceLeft / 10 / 60).toFixed(1).toString();
 
   // Clear warning message
   document.getElementById('warningMessage').textContent = '';
