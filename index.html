@@ -13,7 +13,43 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 100vh;
+  height: 115vh;
+}
+
+@keyframes circleAnimation1  {
+  0% {
+    transform: translate(-50%, -50%) translateX(5px) translateY(0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translateX(0) translateY(5px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateX(-5px) translateY(0);
+  }
+  75% {
+    transform: translate(-50%, -50%) translateX(0) translateY(-5px);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateX(5px) translateY(0);
+  }
+}
+
+@keyframes circleAnimation2 {
+  0% {
+    transform: translate(-50%, -50%) translateX(-5px) translateY(0);
+  }
+  25% {
+    transform: translate(-50%, -50%) translateX(0) translateY(-5px);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateX(5px) translateY(0);
+  }
+  75% {
+    transform: translate(-50%, -50%) translateX(0) translateY(5px);
+  }
+  100% {
+    transform: translate(-50%, -50%) translateX(-5px) translateY(0);
+  }
 }
 
 .shake {
@@ -44,11 +80,24 @@ body {
 }
 
 #logoImage1 {
-  transform: translate(-49%, -51%); /* Offset by 5 pixels upwards */
+  transform: translate(-49%, -52%); /* Offset by 5 pixels upwards */
+  animation: none; /* Disable the animation by default */
+
+  /* Enable the animation only on mobile devices */
+  @media only screen and (hover: none) {
+    animation: circleAnimation1 5s infinite linear; /* Adjust the duration and properties as needed */
+  }
 }
 
 #logoImage2 {
   transform: translate(-51%, -49%);
+  animation: none; /* Disable the animation by default */
+
+  /* Enable the animation only on mobile devices */
+  @media only screen and (hover: none) {
+    animation: circleAnimation2 5s infinite linear; /* Adjust the duration and properties as needed */
+  }
+}
 }
 
 h1 {
@@ -153,6 +202,7 @@ tooltip {
   opacity: 0;
   transition: opacity 0.3s;
 }
+
 
   </style>
 <html lang="en">
@@ -396,19 +446,18 @@ document.addEventListener('DOMContentLoaded', function () {
 const logoContainer = document.getElementById('logoContainer');
 const logoImage = document.getElementById('logoImage');
 
-document.addEventListener('mousemove', (e) => {
+ document.addEventListener('mousemove', (e) => {
   const { clientX: mouseX, clientY: mouseY } = e;
 
   // Adjust the range and scale as needed
-  const offset1X = (mouseX - window.innerWidth / 2) / 150;
-  const offset1Y = (mouseY - window.innerHeight / 2) / 150;
-  const offset2X = -(mouseX - window.innerWidth / 2) / 150;
-  const offset2Y = -(mouseY - window.innerHeight / 2) / 150;
+  const offset1X = (mouseX - window.innerWidth / 2) / 200;
+  const offset1Y = (mouseY - window.innerHeight / 2) / 200;
+  const offset2X = -(mouseX - window.innerWidth / 2) / 200;
+  const offset2Y = -(mouseY - window.innerHeight / 2) / 200;
 
   // Apply the transform with chromatic aberration effect
   logoImage1.style.transform = `translate(-49%, -49%) translate(${offset1X}px, ${offset1Y}px)`;
   logoImage2.style.transform = `translate(-51%, -51%) translate(${offset2X}px, ${offset2Y}px)`;
 });
-
 
 </script>
