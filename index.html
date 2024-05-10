@@ -110,6 +110,7 @@ h1 {
 
 .calculator-container {
   position: relative;
+  z-index: 2;
   margin-top: 20px;
   border: 2px solid #fff;
   background-color: #000;
@@ -166,7 +167,17 @@ button:hover {
 
 .result-container {
   position: relative;
-  z-index: -1;
+  z-index: 1;
+  margin-top: -30px;
+  border: 2px solid #fff;
+  background-color: #000;
+  padding-top: 30px;
+  border-radius: 10px;
+  line-height: 0.75;
+}
+
+.chart-container {
+  position: relative;
   margin-top: -30px;
   border: 2px solid #fff;
   background-color: #000;
@@ -234,8 +245,6 @@ tooltip {
 
     <div class="calculator-container">   
       <div class="tooltip">
-        <button id="advancedModeButton" onclick="toggleAdvancedMode()">Advanced Mode</button>
-        <span class="tooltiptext" id="tooltipText">Enable Advanced Mode for a more accurate result</span>
       </div>
 
 <div id="advancedModeInputs" style="display: none;">
@@ -260,7 +269,7 @@ tooltip {
       <div class="result-container">
       <div id="warningMessage" class="warning"></div>
         <p><strong>Needed to reach desired level</strong></p>
-        <p>XP - <span id="experienceLeft">0</span></p>
+        <be>XP - <span id="experienceLeft">0</span></p>
         <p>Messages - <span id="messagesLeft">0</span></p>
         <p>Voice Hours - <span id="voiceHoursLeft">0</span></p>
         <br>
@@ -269,7 +278,13 @@ tooltip {
         <p>Messages - <span id="messagesTotal">0</span></p>
         <p>Voice Hours - <span id="voiceHoursTotal">0</span></p>
     </div>
-    <div class="signature"> <p> v1.35 | Made with love by Hipperooni <a href="https://www.youtube.com/watch?v=N4uylG_qrcU" target="_blank">🐧</p> </a>
+    <div class="chart-container">
+      <p>
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+      <canvas id="levelingChart"></canvas>
+    </p>
+    </div>
+    <div class="signature"> <p> <br> Updated 10/5/24 <br>v1.4 | Made with love by Hipperooni <a href="https://www.youtube.com/watch?v=N4uylG_qrcU" target="_blank">🐧</p> </a>
     </div>
 
   <script src="script.js"></script>
@@ -316,7 +331,7 @@ async function calculateExperience() {
   if (!isAdvancedMode) {
     totalExperienceStartingLevel = await calculateTotalExperience(startingLevel);
   } else {
-    totalExperienceStartingLevel = (messages * 20) + ((voiceHours * 60) * 10);
+    totalExperienceStartingLevel = ((messages * 20) + ((voiceHours * 60) * 10));
   }
 
   const totalExperienceDesiredLevel = await calculateTotalExperience(desiredLevel);
@@ -399,6 +414,111 @@ function clearResults() {
   document.getElementById('voiceHoursLeft').textContent = '0';
 }
 
+// Prepare the data for the chart
+let dataPromises = [];
+for (let level = 1; level <= 100; level++) {
+  dataPromises.push(calculateTotalExperience(level));
+}
+
+// Declare the chart and data variables outside of the Promise callback
+let chart;
+let data;
+
+Promise.all(dataPromises).then(result => {
+  // Assign the result to the data variable
+  data = result;
+
+  // Log the data to the console
+  console.log(data);
+
+  // Define the user's current level
+  let userLevel = 0; // Replace with the actual user level
+  let desiredLevel = 0; // Replace with the desired level
+
+  // Create a second dataset for the user's current level
+  let userLevelData = Array.from({length: 100}, (_, i) => i + 1 === userLevel ? data[i] : null);
+  let desiredLevelData = Array.from({length: 100}, (_, i) => i + 1 === desiredLevel ? data[i] : null);
+
+  // Create the chart
+  let ctx = document.getElementById('levelingChart').getContext('2d');
+  chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: Array.from({length: 100}, (_, i) => i + 1), // Labels are the levels from 1 to 100
+      datasets: [{
+        label: 'XP Required',
+        data: data,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1,
+        pointRadius: 0, // Make the point larger
+      }, {
+        label: 'User Level',
+        data: userLevelData,
+        borderColor: 'rgb(255, 0, 0)', // Red color
+        tension: 0.1,
+        fill: true,
+        pointRadius: 5, // Make the point larger
+        pointHoverRadius: 7, // Make the point larger when hovered
+      }, {
+        label: 'Desired Level',
+        data: desiredLevelData,
+        borderColor: 'rgb(0, 255, 0)', // Green color
+        tension: 0.1,
+        fill: true,
+        pointRadius: 5, // Make the point larger
+        pointHoverRadius: 7, // Make the point larger when hovered
+    }]
+    },
+    options: {
+      Animation: {
+        duration: 0 // Disable animations
+      },
+      interaction: {
+        mode: 'index',
+        intersect: false
+      },
+      plugins: {
+        legend: {
+          labels: {
+            usePointStyle: true, // Make the legend labels circular
+            boxWidth: 10, // Adjust the size of the legend labels
+      },
+      onClick: (e) => e.stopPropagation()
+    }
+  },
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: 'Level'
+          },
+          ticks: {
+            stepSize: 10, // Show levels in increments of 10
+            min: 0,
+            max: 100, // Show levels up to 100
+            autoSkip: true, // Do not skip any levels
+            autoSkipPadding: 5, // Adjust the padding as needed
+            maxTicksLimit: 12 // Show a maximum of 11 levels
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: 'Experience'
+          },
+          ticks: {
+            // Adjust the step size and max value to fit your data
+            // These values are placeholders, replace them with suitable values
+            stepSize: 50000, 
+            max: 5000000, 
+          }
+        }
+      }
+    }
+  });
+});
+
+
 function updateResults(totalExperienceDesiredLevel, experienceLeft) {
   // Update results as usual
   document.getElementById('totalExperience').textContent = totalExperienceDesiredLevel.toString();
@@ -408,6 +528,18 @@ function updateResults(totalExperienceDesiredLevel, experienceLeft) {
   document.getElementById('experienceLeft').textContent = experienceLeft > 0 ? experienceLeft.toString() : '0';
   document.getElementById('messagesLeft').textContent = Math.ceil(experienceLeft / 20).toString();
   document.getElementById('voiceHoursLeft').textContent = (experienceLeft / 10 / 60).toFixed(1).toString();
+
+    // Update the chart
+    if (chart) {
+    // Update the user's current level
+    let userLevel = parseInt(document.getElementById('startingLevel').value) || 0;
+    chart.data.datasets[1].data = Array.from({length: 100}, (_, i) => i + 1 === userLevel ? data[i] : null);
+    let desiredLevel = parseInt(document.getElementById('desiredLevel').value) || 0;
+    chart.data.datasets[2].data = Array.from({length: 100}, (_, i) => i + 1 === desiredLevel ? data[i] : null);
+
+    // Redraw the chart
+    chart.update();
+  }
 
   // Clear warning message
   document.getElementById('warningMessage').textContent = '';
