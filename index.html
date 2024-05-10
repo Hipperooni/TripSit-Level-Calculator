@@ -499,6 +499,10 @@ Promise.all(dataPromises).then(result => {
             autoSkip: true, // Do not skip any levels
             autoSkipPadding: 5, // Adjust the padding as needed
             maxTicksLimit: 12 // Show a maximum of 11 levels
+          },
+          grid: {
+           color: 'rgba(128, 128, 128, 0.15)', // Set the color of the grid lines
+           drawOnChartArea: true, // Draw the grid lines on the chart area
           }
         },
         y: {
@@ -511,6 +515,10 @@ Promise.all(dataPromises).then(result => {
             // These values are placeholders, replace them with suitable values
             stepSize: 250000, 
             max: 5000000, 
+          },
+          grid: {
+           color: 'rgba(128, 128, 128, 0.15)', // Set the color of the grid lines
+           drawOnChartArea: true, // Draw the grid lines on the chart area
           }
         }
       }
